@@ -44,7 +44,9 @@ public class restaurante {
     }
 
     public void setProductos(ArrayList<String> productos) {
-        this.productos = productos;
+        if (productos.size()<=3) {
+            this.productos = productos;
+        }
     }
 
     @Override
