@@ -4,14 +4,19 @@
  */
 package lab7p2_jazminsalgado;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -561,7 +566,29 @@ public class principal extends javax.swing.JFrame {
         pn_menuuser.setVisible(true);
         mi_eliminar.setEnabled(true);
     }
-
+    public void listaraArbol(){
+       
+        DefaultTreeModel tree = (DefaultTreeModel)t_restE.getModel();
+        File f = null;
+        Scanner leer = null;
+        DefaultMutableTreeNode rest=(DefaultMutableTreeNode)tree.getRoot();
+       
+        try {
+            f = new File("./restaurants.rst");
+             AdministrarRestaurante ar = new AdministrarRestaurante("./restaurants.rst");
+            leer = new Scanner(f);
+            while (leer.hasNext()) {                
+                String nombre = leer.nextLine();
+                DefaultMutableTreeNode name;
+                name = new DefaultMutableTreeNode();
+                String ubicacion=leer.nextLine();
+                
+            }
+            
+        } catch (Exception e) {
+        }
+        
+    }
     /**
      * @param args the command line arguments
      */
