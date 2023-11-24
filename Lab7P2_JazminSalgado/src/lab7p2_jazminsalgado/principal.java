@@ -6,6 +6,7 @@ package lab7p2_jazminsalgado;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -23,7 +24,7 @@ public class principal extends javax.swing.JFrame {
      */
     public principal() {
         initComponents();
-        
+
         pn_iniciarsesion.setVisible(false);
         pn_menuuser.setVisible(false);
         pn_menuadmin.setVisible(false);
@@ -305,6 +306,11 @@ public class principal extends javax.swing.JFrame {
         );
 
         bt_agregarrest.setText("Crear Restaurante");
+        bt_agregarrest.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_agregarrestMouseClicked(evt);
+            }
+        });
 
         jLabel14.setText("Nombre");
 
@@ -315,6 +321,11 @@ public class principal extends javax.swing.JFrame {
         jLabel17.setText("Nombre de Producto:");
 
         bt_agregarprod.setText("Agregar Producto");
+        bt_agregarprod.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_agregarprodMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -461,13 +472,21 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_bt_iniciarsesionMouseClicked
 
     private void bt_iniciarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_iniciarSesionMouseClicked
-
-        if (tf_usersignin.getText().equals("admin123")&&pf_pswdsignin.getText().equals("123a")) {
+        AdministrarUsuario au = new AdministrarUsuario("./users.urs");
+        String user = tf_usersignin.getText(), pswrd = pf_pswdsignin.getText();
+        if (user.equals("admin123") && pswrd.equals("123a")) {
             iniciarAdmin();
-        }else{
-           iniciarUser();
+        } else {
+            for (usuario lu : au.getListarUsers()) {
+                if (lu.getUsername().equals(user) && lu.getContraseña().equals(pswrd)) {
+                    JOptionPane.showMessageDialog(this, "Bienvenido " + lu.getNombre());
+                    iniciarUser();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrecta");
+                }
+            }
         }
-        
+
     }//GEN-LAST:event_bt_iniciarSesionMouseClicked
 
     private void bt_agregarUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_agregarUserMouseClicked
@@ -475,9 +494,9 @@ public class principal extends javax.swing.JFrame {
         JFileChooser jfc = new JFileChooser("./");
         jfc.setFileFilter(fUser);
         String fname = jfc.getName(f);
-       
+
         AdministrarUsuario au = new AdministrarUsuario(fname);
-        String name = tf_agregarnombrecomun.getText(), username = tf_agregarusername.getText(), pswrd=tf_Agregarpswrd.getText();
+        String name = tf_agregarnombrecomun.getText(), username = tf_agregarusername.getText(), pswrd = tf_Agregarpswrd.getText();
         usuario u = new usuario(name, username, pswrd, 0);
         au.cargar();
         au.getListarUsers().add(u);
@@ -486,23 +505,63 @@ public class principal extends javax.swing.JFrame {
         } catch (Exception e) {
         }
         JOptionPane.showMessageDialog(this, "Usuario creado exitosamente");
-        tf_agregarnombrecomun.setText("");  
-        tf_agregarusername.setText(""); 
+        tf_agregarnombrecomun.setText("");
+        tf_agregarusername.setText("");
         tf_Agregarpswrd.setText("");
     }//GEN-LAST:event_bt_agregarUserMouseClicked
-    public void iniciarAdmin(){
+
+    private void bt_agregarprodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_agregarprodMouseClicked
+        String producto = tf_nombreprod.getText();
+        if (r.getProductos().size() <= 2) {
+            r.getProductos().add(producto);
+            JOptionPane.showMessageDialog(this, "Producto creado");
+            System.out.println(r.getProductos().size());
+        } else {
+            tf_nombreprod.setEnabled(false);
+            bt_agregarprod.setEnabled(false);
+        }
+        tf_nombreprod.setText("");
+    }//GEN-LAST:event_bt_agregarprodMouseClicked
+
+    private void bt_agregarrestMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_agregarrestMouseClicked
+        File f = new File("./restaurants.rst");
+        JFileChooser jfc = new JFileChooser("./");
+        jfc.setFileFilter(fRest);
+        String fname = jfc.getName(f);
+
+        AdministrarRestaurante ar = new AdministrarRestaurante(fname);
+
+        String name = tf_nombrerest.getText(), location = tf_ubicacionrest.getText();
+        ar.cargar();
+        r = new restaurante(name, location);
+        JOptionPane.showMessageDialog(this, "Producto agregado correctamente");
+        ar.getListarRest().add(r);
+        try {
+            ar.escribir();
+        } catch (IOException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        r.getProductos().clear();
+        tf_nombrerest.setText("");
+        tf_ubicacionrest.setText("");
+
+
+    }//GEN-LAST:event_bt_agregarrestMouseClicked
+    public void iniciarAdmin() {
         jDialog1.setVisible(false);
         pn_menuadmin.setVisible(true);
         pn_menuuser.setVisible(false);
         mi_eliminar.setEnabled(false);
-        
+
     }
-    public void iniciarUser(){
+
+    public void iniciarUser() {
         jDialog1.setVisible(false);
         pn_menuadmin.setVisible(false);
         pn_menuuser.setVisible(true);
         mi_eliminar.setEnabled(true);
     }
+
     /**
      * @param args the command line arguments
      */
@@ -537,9 +596,10 @@ public class principal extends javax.swing.JFrame {
             }
         });
     }
- FileNameExtensionFilter fRest= new FileNameExtensionFilter("Restaurante", "rst");
- FileNameExtensionFilter fUser= new FileNameExtensionFilter("Usuario", "usr");
- FileNameExtensionFilter fSale= new FileNameExtensionFilter("Venta", "vnt");
+    FileNameExtensionFilter fRest = new FileNameExtensionFilter("Restaurante", "rst");
+    FileNameExtensionFilter fUser = new FileNameExtensionFilter("Usuario", "usr");
+    FileNameExtensionFilter fSale = new FileNameExtensionFilter("Venta", "vnt");
+    restaurante r = new restaurante();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bt_agregarUser;
     private javax.swing.JButton bt_agregarprod;

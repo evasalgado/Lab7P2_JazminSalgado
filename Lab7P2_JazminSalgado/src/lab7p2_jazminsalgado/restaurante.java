@@ -22,7 +22,11 @@ public class restaurante {
         this.nombre = nombre;
         this.ubicacion = ubicacion;
     }
-
+    public restaurante(String nombre, String ubicacion,ArrayList<String> p) {
+        this.nombre = nombre;
+        this.ubicacion = ubicacion;
+        productos=p;
+    }
     public String getNombre() {
         return nombre;
     }
@@ -44,14 +48,14 @@ public class restaurante {
     }
 
     public void setProductos(ArrayList<String> productos) {
-        if (productos.size()<=3) {
+        if (productos.size()<=2) {
             this.productos = productos;
         }
     }
 
     @Override
     public String toString() {
-        return nombre ;
+        return nombre +productos ;
     }
     
     

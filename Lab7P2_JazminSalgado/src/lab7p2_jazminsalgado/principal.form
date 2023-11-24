@@ -559,6 +559,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Crear Restaurante"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="bt_agregarrestMouseClicked"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel14">
                   <Properties>
@@ -590,6 +593,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Agregar Producto"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="bt_agregarprodMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
