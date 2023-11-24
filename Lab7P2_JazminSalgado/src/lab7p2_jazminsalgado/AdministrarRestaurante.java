@@ -15,21 +15,20 @@ import java.util.Scanner;
  *
  * @author evaja
  */
-public class AdministrarUsuario {
-
-    private ArrayList<usuario> listarUsers = new ArrayList<>();
+public class AdministrarRestaurante {
+    private ArrayList<restaurante> listarRest = new ArrayList<>();
     private File archivo = null;
 
-    public AdministrarUsuario(String path) {
+    public AdministrarRestaurante(String path) {
         archivo = new File(path);
     }
 
-    public ArrayList<usuario> getListarUsers() {
-        return listarUsers;
+    public ArrayList<restaurante> getListarRest() {
+        return listarRest;
     }
 
-    public void setListarUsers(ArrayList<usuario> listarUsers) {
-        this.listarUsers = listarUsers;
+    public void setListarRest(ArrayList<restaurante> listarRest) {
+        this.listarRest = listarRest;
     }
 
     public File getArchivo() {
@@ -42,11 +41,13 @@ public class AdministrarUsuario {
 
     @Override
     public String toString() {
-        return "listarUsers=" + listarUsers + '}';
+        return "listarRest=" + listarRest ;
     }
 
-    public void setUsers(usuario u) {
-        this.listarUsers.add(u);
+    
+
+    public void setRest(restaurante r) {
+        this.listarRest.add(r);
     }
 
     public void escribir() throws IOException {
@@ -56,9 +57,9 @@ public class AdministrarUsuario {
         try {
             fw = new FileWriter(archivo, true);
             bw = new BufferedWriter(fw);
-            for (usuario lu : listarUsers) {
-                bw.write(lu.getNombre() + ";" + lu.getUsername() + ";"
-                        + lu.getContraseña() + ";" + lu.getSaldo()+ ";");
+            for (restaurante rest: listarRest) {
+                bw.write(rest.getNombre() + ";"+rest.getUbicacion()+ ";"
+                +rest.getProductos()+ ";");
             }
             bw.flush();
         } catch (Exception e) {
@@ -69,17 +70,13 @@ public class AdministrarUsuario {
 
     public void cargar() {
         Scanner carga = null;
-        listarUsers = new ArrayList<>();
+        listarRest = new ArrayList<>();
         if (archivo.exists()) {
             try {
                 carga = new Scanner(archivo);
                 carga.useDelimiter(";");
                 while (carga.hasNext()) {
-                    listarUsers.add(new usuario(carga.nextLine(),
-                            carga.next(),
-                            carga.next(),
-                            carga.nextDouble()
-                    )
+                    listarRest.add(new restaurante(carga.nextLine(),carga.nextLine())
                     );
                 }
             } catch (Exception e) {
