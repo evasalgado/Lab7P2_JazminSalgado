@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -22,22 +23,7 @@ public class principal extends javax.swing.JFrame {
      */
     public principal() {
         initComponents();
-        File f = new File("./users.urs");
-        JFileChooser jfc = new JFileChooser("./");
-        jfc.setFileFilter(fUser);
-        String fname = jfc.getName(f);
-       
-        AdministrarUsuario au = new AdministrarUsuario(fname);
-        au.cargar();
-        String nombre = "admin";
-        String username = "admin123";
-        String contraseña = "123a";
-        au.getListarUsers().add(new usuario(nombre, username, contraseña, 0));
-        try {
-            au.escribir();
-        } catch (IOException ex) {
-            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         pn_iniciarsesion.setVisible(false);
         pn_menuuser.setVisible(false);
         pn_menuadmin.setVisible(false);
@@ -61,10 +47,10 @@ public class principal extends javax.swing.JFrame {
         bt_iniciarsesion = new javax.swing.JButton();
         pn_registrarse = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        tf_agregarnombrecomun = new javax.swing.JTextField();
+        tf_Agregarpswrd = new javax.swing.JPasswordField();
+        tf_agregarusername = new javax.swing.JTextField();
+        bt_agregarUser = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -129,7 +115,12 @@ public class principal extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Sign Up");
 
-        jButton1.setText("Agregar Usuario");
+        bt_agregarUser.setText("Agregar Usuario");
+        bt_agregarUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_agregarUserMouseClicked(evt);
+            }
+        });
 
         jLabel2.setText("Nombre de Usuario");
 
@@ -148,14 +139,14 @@ public class principal extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pn_registrarseLayout.createSequentialGroup()
                         .addGap(141, 141, 141)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bt_agregarUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(39, 39, 39))
                     .addGroup(pn_registrarseLayout.createSequentialGroup()
                         .addGap(107, 107, 107)
                         .addGroup(pn_registrarseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1)
-                            .addComponent(jPasswordField1)
-                            .addComponent(jTextField2)
+                            .addComponent(tf_agregarnombrecomun)
+                            .addComponent(tf_Agregarpswrd)
+                            .addComponent(tf_agregarusername)
                             .addGroup(pn_registrarseLayout.createSequentialGroup()
                                 .addGroup(pn_registrarseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -172,17 +163,17 @@ public class principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addGap(7, 7, 7)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tf_agregarnombrecomun, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tf_agregarusername, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addGap(5, 5, 5)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tf_Agregarpswrd, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(bt_agregarUser)
                 .addContainerGap(46, Short.MAX_VALUE))
         );
 
@@ -478,6 +469,27 @@ public class principal extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_bt_iniciarSesionMouseClicked
+
+    private void bt_agregarUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_agregarUserMouseClicked
+        File f = new File("./users.urs");
+        JFileChooser jfc = new JFileChooser("./");
+        jfc.setFileFilter(fUser);
+        String fname = jfc.getName(f);
+       
+        AdministrarUsuario au = new AdministrarUsuario(fname);
+        String name = tf_agregarnombrecomun.getText(), username = tf_agregarusername.getText(), pswrd=tf_Agregarpswrd.getText();
+        usuario u = new usuario(name, username, pswrd, 0);
+        au.cargar();
+        au.getListarUsers().add(u);
+        try {
+            au.escribir();
+        } catch (Exception e) {
+        }
+        JOptionPane.showMessageDialog(this, "Usuario creado exitosamente");
+        tf_agregarnombrecomun.setText("");  
+        tf_agregarusername.setText(""); 
+        tf_Agregarpswrd.setText("");
+    }//GEN-LAST:event_bt_agregarUserMouseClicked
     public void iniciarAdmin(){
         jDialog1.setVisible(false);
         pn_menuadmin.setVisible(true);
@@ -529,13 +541,13 @@ public class principal extends javax.swing.JFrame {
  FileNameExtensionFilter fUser= new FileNameExtensionFilter("Usuario", "usr");
  FileNameExtensionFilter fSale= new FileNameExtensionFilter("Venta", "vnt");
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bt_agregarUser;
     private javax.swing.JButton bt_agregarprod;
     private javax.swing.JButton bt_agregarrest;
     private javax.swing.JButton bt_comprarProducto;
     private javax.swing.JButton bt_eliminarRest;
     private javax.swing.JButton bt_iniciarSesion;
     private javax.swing.JButton bt_iniciarsesion;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
@@ -557,7 +569,6 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -566,8 +577,6 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JMenu m_archivos;
@@ -583,6 +592,9 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JTree t_restE;
     private javax.swing.JTree t_restaurantes;
     private javax.swing.JTree t_user;
+    private javax.swing.JPasswordField tf_Agregarpswrd;
+    private javax.swing.JTextField tf_agregarnombrecomun;
+    private javax.swing.JTextField tf_agregarusername;
     private javax.swing.JTextField tf_nombreprod;
     private javax.swing.JTextField tf_nombrerest;
     private javax.swing.JTextField tf_ubicacionrest;
