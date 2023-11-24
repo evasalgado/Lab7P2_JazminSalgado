@@ -4,8 +4,10 @@
  */
 package lab7p2_jazminsalgado;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,4 +89,22 @@ public class AdministrarUsuario {
             carga.close();
         }
     }
+//    public void IdentificadordeAdmin() throws IOException{
+//        principal p = new principal();
+//        FileReader fr = null;
+//        BufferedReader br = null;
+//        try {
+//            fr=new FileReader(archivo);
+//            br=new BufferedReader(br);
+//            for (usuario lu : listarUsers) {
+//                if (br.readLine().contains("admin123")&&br.readLine().contains("123a")) {
+//                    p.iniciarAdmin();
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
+//        br.close();
+//        fr.close();
+//       
+//    }
 }

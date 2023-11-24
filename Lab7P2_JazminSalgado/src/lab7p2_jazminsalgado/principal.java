@@ -4,6 +4,13 @@
  */
 package lab7p2_jazminsalgado;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author evaja
@@ -15,9 +22,25 @@ public class principal extends javax.swing.JFrame {
      */
     public principal() {
         initComponents();
-        
+        File f = new File("./users.urs");
+        JFileChooser jfc = new JFileChooser("./");
+        jfc.setFileFilter(fUser);
+        String fname = jfc.getName(f);
+       
+        AdministrarUsuario au = new AdministrarUsuario(fname);
+        au.cargar();
+        String nombre = "admin";
+        String username = "admin123";
+        String contraseña = "123a";
+        au.getListarUsers().add(new usuario(nombre, username, contraseña, 0));
+        try {
+            au.escribir();
+        } catch (IOException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         pn_iniciarsesion.setVisible(false);
-        jTabbedPane1.setVisible(false);
+        pn_menuuser.setVisible(false);
+        pn_menuadmin.setVisible(false);
         this.setLocationRelativeTo(null);
         jDialog1.pack();
         jDialog1.setLocationRelativeTo(this);
@@ -47,12 +70,12 @@ public class principal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         pn_iniciarsesion = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
+        pf_pswdsignin = new javax.swing.JPasswordField();
+        tf_usersignin = new javax.swing.JTextField();
+        bt_iniciarSesion = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        pn_menuuser = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -66,7 +89,7 @@ public class principal extends javax.swing.JFrame {
         jPasswordField3 = new javax.swing.JPasswordField();
         jLabel10 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        pn_menuadmin = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         bt_agregarrest = new javax.swing.JButton();
@@ -96,6 +119,11 @@ public class principal extends javax.swing.JFrame {
         jDialog1.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         bt_iniciarsesion.setText("Sign In");
+        bt_iniciarsesion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_iniciarsesionMouseClicked(evt);
+            }
+        });
         jDialog1.getContentPane().add(bt_iniciarsesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -165,11 +193,16 @@ public class principal extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Sign In");
         pn_iniciarsesion.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 38, 145, 44));
-        pn_iniciarsesion.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 218, 116, 42));
-        pn_iniciarsesion.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 122, 116, 57));
+        pn_iniciarsesion.add(pf_pswdsignin, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 218, 116, 42));
+        pn_iniciarsesion.add(tf_usersignin, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 122, 116, 57));
 
-        jButton3.setText("Iniciar Sesion");
-        pn_iniciarsesion.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 278, -1, -1));
+        bt_iniciarSesion.setText("Iniciar Sesion");
+        bt_iniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_iniciarSesionMouseClicked(evt);
+            }
+        });
+        pn_iniciarsesion.add(bt_iniciarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 278, -1, -1));
 
         jLabel6.setText("Nombre de Usuario");
         pn_iniciarsesion.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 100, 116, -1));
@@ -263,18 +296,18 @@ public class principal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Modificar", jPanel4);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout pn_menuuserLayout = new javax.swing.GroupLayout(pn_menuuser);
+        pn_menuuser.setLayout(pn_menuuserLayout);
+        pn_menuuserLayout.setHorizontalGroup(
+            pn_menuuserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn_menuuserLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        pn_menuuserLayout.setVerticalGroup(
+            pn_menuuserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn_menuuserLayout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
@@ -374,18 +407,18 @@ public class principal extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Ver Datos", jPanel7);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout pn_menuadminLayout = new javax.swing.GroupLayout(pn_menuadmin);
+        pn_menuadmin.setLayout(pn_menuadminLayout);
+        pn_menuadminLayout.setHorizontalGroup(
+            pn_menuadminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn_menuadminLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPane2)
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        pn_menuadminLayout.setVerticalGroup(
+            pn_menuadminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn_menuadminLayout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(jTabbedPane2)
                 .addContainerGap())
@@ -410,26 +443,54 @@ public class principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pn_menuuser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(6, 6, 6)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pn_menuadmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGap(6, 6, 6)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pn_menuuser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(6, 6, 6)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pn_menuadmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGap(6, 6, 6)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bt_iniciarsesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_iniciarsesionMouseClicked
+        bt_iniciarsesion.setVisible(false);
+        pn_iniciarsesion.setVisible(true);
+        pn_registrarse.setVisible(false);
+    }//GEN-LAST:event_bt_iniciarsesionMouseClicked
+
+    private void bt_iniciarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_iniciarSesionMouseClicked
+
+        if (tf_usersignin.getText().equals("admin123")&&pf_pswdsignin.getText().equals("123a")) {
+            iniciarAdmin();
+        }else{
+           iniciarUser();
+        }
+        
+    }//GEN-LAST:event_bt_iniciarSesionMouseClicked
+    public void iniciarAdmin(){
+        jDialog1.setVisible(false);
+        pn_menuadmin.setVisible(true);
+        pn_menuuser.setVisible(false);
+        mi_eliminar.setEnabled(false);
+        
+    }
+    public void iniciarUser(){
+        jDialog1.setVisible(false);
+        pn_menuadmin.setVisible(false);
+        pn_menuuser.setVisible(true);
+        mi_eliminar.setEnabled(true);
+    }
     /**
      * @param args the command line arguments
      */
@@ -464,16 +525,18 @@ public class principal extends javax.swing.JFrame {
             }
         });
     }
-
+ FileNameExtensionFilter fRest= new FileNameExtensionFilter("Restaurante", "rst");
+ FileNameExtensionFilter fUser= new FileNameExtensionFilter("Usuario", "usr");
+ FileNameExtensionFilter fSale= new FileNameExtensionFilter("Venta", "vnt");
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bt_agregarprod;
     private javax.swing.JButton bt_agregarrest;
     private javax.swing.JButton bt_comprarProducto;
     private javax.swing.JButton bt_eliminarRest;
+    private javax.swing.JButton bt_iniciarSesion;
     private javax.swing.JButton bt_iniciarsesion;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -489,15 +552,12 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JPasswordField jPasswordField3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -509,13 +569,15 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JMenu m_archivos;
     private javax.swing.JMenuBar mb_opciones;
     private javax.swing.JMenuItem mi_eliminar;
     private javax.swing.JMenuItem mi_salir;
+    private javax.swing.JPasswordField pf_pswdsignin;
     private javax.swing.JPanel pn_iniciarsesion;
+    private javax.swing.JPanel pn_menuadmin;
+    private javax.swing.JPanel pn_menuuser;
     private javax.swing.JPanel pn_registrarse;
     private javax.swing.JTree t_rest;
     private javax.swing.JTree t_restE;
@@ -524,5 +586,6 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JTextField tf_nombreprod;
     private javax.swing.JTextField tf_nombrerest;
     private javax.swing.JTextField tf_ubicacionrest;
+    private javax.swing.JTextField tf_usersignin;
     // End of variables declaration//GEN-END:variables
 }
