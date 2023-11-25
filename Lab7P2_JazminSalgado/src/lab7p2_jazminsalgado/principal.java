@@ -43,7 +43,7 @@ public final class principal extends javax.swing.JFrame {
         System.out.println("Antes de cargar el árbol: " + t_restE.getModel());
         listaraRest();
         System.out.println("Después de cargar el árbol: " + t_restE.getModel());
-
+        listarUser();
     }
 
     /**
@@ -108,6 +108,11 @@ public final class principal extends javax.swing.JFrame {
         t_user = new javax.swing.JTree();
         jScrollPane4 = new javax.swing.JScrollPane();
         t_rest = new javax.swing.JTree();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        t_user1 = new javax.swing.JTree();
+        jLabel13 = new javax.swing.JLabel();
         mb_opciones = new javax.swing.JMenuBar();
         m_archivos = new javax.swing.JMenu();
         mi_salir = new javax.swing.JMenuItem();
@@ -416,17 +421,32 @@ public final class principal extends javax.swing.JFrame {
 
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Usuarios");
+        treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Ventas");
         t_user.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane3.setViewportView(t_user);
 
-        jPanel7.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 100, 250));
+        jPanel7.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 100, 250));
 
         treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Restaurantes");
         t_rest.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane4.setViewportView(t_rest);
 
         jPanel7.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 100, 250));
+
+        jLabel11.setText("Ventas");
+        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, -1, -1));
+
+        jLabel12.setText("Restaurantes ");
+        jPanel7.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Usuarios");
+        t_user1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane5.setViewportView(t_user1);
+
+        jPanel7.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 100, 250));
+
+        jLabel13.setText("Usuarios");
+        jPanel7.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, -1, -1));
 
         jTabbedPane2.addTab("Ver Datos", jPanel7);
 
@@ -603,11 +623,12 @@ public final class principal extends javax.swing.JFrame {
             bw = new BufferedWriter(fw);
             String select = t_restaurantes.getSelectionPath().toString();
             int price = 100;
-            bw.write(select + ";" + price);
+            
             JOptionPane.showMessageDialog(this, "Compra hecha");
             au.cargar();
             for (int i = 0; i < au.getListarUsers().size(); i++) {
                 au.getListarUsers().get(i).setSaldo( au.getListarUsers().get(i).getSaldo()+price);
+                bw.write(select + ";" + price+";" +au.getListarUsers().get(i).getUsername());
             }
         } catch (Exception e) {
         }
@@ -678,8 +699,20 @@ public final class principal extends javax.swing.JFrame {
         raiz.removeAllChildren();
         arbol.reload();
         AdministrarUsuario au = new AdministrarUsuario("./users.usr");
-        ar.cargar();
-        ArrayList<restaurante> listRest = ar.getListarRest();
+        au.cargar();
+        ArrayList<usuario> listU = au.getListarUsers();
+        for (usuario u: listU) {
+            DefaultMutableTreeNode n=new DefaultMutableTreeNode(u.getNombre());
+            DefaultMutableTreeNode un = new DefaultMutableTreeNode(u.getUsername());
+            DefaultMutableTreeNode p = new DefaultMutableTreeNode(u.getContraseña());
+            DefaultMutableTreeNode s = new DefaultMutableTreeNode(u.getSaldo());
+            un.add(n);
+            un.add(p);
+            un.add(s);
+            raiz.add(un);
+        }
+        arbol.reload();
+        t_user.setModel(arbol);
     }
 
     public void listaraRest() {
@@ -704,6 +737,7 @@ public final class principal extends javax.swing.JFrame {
             raiz.add(n);
         }
         arbol.reload();
+        
         t_restE.setModel(arbol);
     }
 
@@ -758,6 +792,9 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -779,6 +816,7 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
@@ -796,6 +834,7 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JTree t_restE;
     private javax.swing.JTree t_restaurantes;
     private javax.swing.JTree t_user;
+    private javax.swing.JTree t_user1;
     private javax.swing.JPasswordField tf_Agregarpswrd;
     private javax.swing.JTextField tf_agregarnombrecomun;
     private javax.swing.JTextField tf_agregarusername;
