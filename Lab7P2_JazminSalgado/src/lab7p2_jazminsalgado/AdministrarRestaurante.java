@@ -59,7 +59,7 @@ public class AdministrarRestaurante {
             bw = new BufferedWriter(fw);
             for (restaurante rest: listarRest) {
                 bw.write(rest.getNombre() + ";"+rest.getUbicacion()+ ";"
-                +rest.getProductos()+ ";");
+                +rest.getProductos());
             }
             bw.flush();
         } catch (Exception e) {

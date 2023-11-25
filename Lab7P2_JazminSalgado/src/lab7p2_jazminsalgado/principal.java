@@ -5,8 +5,10 @@
 package lab7p2_jazminsalgado;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -22,7 +24,7 @@ import javax.swing.tree.DefaultTreeModel;
  *
  * @author evaja
  */
-public class principal extends javax.swing.JFrame {
+public final class principal extends javax.swing.JFrame {
 
     /**
      * Creates new form principal
@@ -38,8 +40,9 @@ public class principal extends javax.swing.JFrame {
         jDialog1.setLocationRelativeTo(this);
         jDialog1.setModal(true);
         jDialog1.setVisible(true);
-        listaraArbol("./restaurants.rst");
-        listaraArbol("./restaurants.rst");
+        System.out.println("Antes de cargar el árbol: " + t_restE.getModel());
+        listaraRest();
+        System.out.println("Después de cargar el árbol: " + t_restE.getModel());
 
     }
 
@@ -219,6 +222,11 @@ public class principal extends javax.swing.JFrame {
         jScrollPane1.setViewportView(t_restaurantes);
 
         bt_comprarProducto.setText("Comprar");
+        bt_comprarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_comprarProductoMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -522,6 +530,7 @@ public class principal extends javax.swing.JFrame {
         tf_agregarnombrecomun.setText("");
         tf_agregarusername.setText("");
         tf_Agregarpswrd.setText("");
+        iniciarUser();
     }//GEN-LAST:event_bt_agregarUserMouseClicked
 
     private void bt_agregarprodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_agregarprodMouseClicked
@@ -547,6 +556,7 @@ public class principal extends javax.swing.JFrame {
 
         String name = tf_nombrerest.getText(), location = tf_ubicacionrest.getText();
         ar.cargar();
+
         r = new restaurante(name, location);
         JOptionPane.showMessageDialog(this, "Producto agregado correctamente");
         ar.getListarRest().add(r);
@@ -563,17 +573,41 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_bt_agregarrestMouseClicked
 
     private void mi_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_salirActionPerformed
-         jDialog1.setVisible(true);
+        jDialog1.setVisible(true);
         pn_menuadmin.setVisible(false);
         jTabbedPane2.setVisible(false);
         pn_menuuser.setVisible(false);
         mi_eliminar.setEnabled(false);
     }//GEN-LAST:event_mi_salirActionPerformed
+
+    private void bt_comprarProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_comprarProductoMouseClicked
+        File f = new File("./ventas.vnt");
+        JFileChooser jfc = new JFileChooser("./");
+        jfc.setFileFilter(fSale);
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        try {
+            fw = new FileWriter(f);
+            bw = new BufferedWriter(fw);
+            String select = t_restaurantes.getSelectionPath().toString();
+            int price = 100;
+            bw.write(select + ";" + price);
+            JOptionPane.showMessageDialog(this, "Compra hecha");
+        } catch (Exception e) {
+        }
+        try {
+            bw.close();
+            fw.close();
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_bt_comprarProductoMouseClicked
     public void iniciarAdmin() {
         jDialog1.setVisible(false);
         pn_menuadmin.setVisible(true);
         pn_menuuser.setVisible(false);
         mi_eliminar.setEnabled(false);
+        t_rest.setVisible(true);
+        t_restE.setVisible(true);
 
     }
 
@@ -582,47 +616,43 @@ public class principal extends javax.swing.JFrame {
         pn_menuadmin.setVisible(false);
         pn_menuuser.setVisible(true);
         mi_eliminar.setEnabled(true);
+        listaraRest();
     }
 
-    public void listaraArbol(String file) {
-        DefaultTreeModel arbol=(DefaultTreeModel) t_restE.getModel();
+    public void listarUser() {
+        DefaultTreeModel arbol = (DefaultTreeModel) t_user.getModel();
         DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) arbol.getRoot();
-        File f = null;
-        FileReader fr = null;
-        BufferedReader br = null;
 
-        try {
-            String separar;
-            f = new File(file);
-            fr = new FileReader(f);
-            br = new BufferedReader(fr);
-            while ((separar = br.readLine()) != null) {
-                String[] token = separar.split(";");
-                if (token.length == 3) {
-                    DefaultMutableTreeNode nombre = new DefaultMutableTreeNode(token[0]);
-                    DefaultMutableTreeNode location = new DefaultMutableTreeNode(token[1]);
-                    DefaultMutableTreeNode products = new DefaultMutableTreeNode("Productos");
-                    String[] token2 = token[2].split("");
-                    for (String t : token2) {
-                        products.add(new DefaultMutableTreeNode(t));
-                    }
-                    nombre.add(location);
-                    nombre.add(products);
+        raiz.removeAllChildren();
+        arbol.reload();
+        AdministrarUsuario au = new AdministrarUsuario("./users.usr");
+        ar.cargar();
+        ArrayList<restaurante> listRest = ar.getListarRest();
+    }
 
-                    raiz.add(nombre);
-                }
+    public void listaraRest() {
+        DefaultTreeModel arbol = (DefaultTreeModel) t_restE.getModel();
+        DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) arbol.getRoot();
+
+        raiz.removeAllChildren();
+        arbol.reload();
+        ar = new AdministrarRestaurante("./restaurants.rst");
+        ar.cargar();
+        ArrayList<restaurante> listRest = ar.getListarRest();
+        for (restaurante r : listRest) {
+            DefaultMutableTreeNode n = new DefaultMutableTreeNode(r.getNombre());
+            DefaultMutableTreeNode l = new DefaultMutableTreeNode(r.getUbicacion());
+            DefaultMutableTreeNode p = new DefaultMutableTreeNode("Productos");
+            for (String lp : r.getProductos()) {
+                p.add(new DefaultMutableTreeNode(lp));
             }
-            arbol.reload();
 
-        } catch (Exception e) {
+            n.add(l);
+            n.add(p);
+            raiz.add(n);
         }
-        try {
-            br.close();
-            fr.close();
-        } catch (IOException ex) {
-            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        arbol.reload();
+        t_restE.setModel(arbol);
     }
 
     /**
