@@ -38,7 +38,11 @@ public class principal extends javax.swing.JFrame {
         jDialog1.setLocationRelativeTo(this);
         jDialog1.setModal(true);
         jDialog1.setVisible(true);
-        listaraArbol();
+        DefaultTreeModel arbol = (DefaultTreeModel) t_rest.getModel();
+        DefaultTreeModel arbolE = (DefaultTreeModel) t_restE.getModel();
+        listaraArbol("./restaurants.rst", arbol);
+        listaraArbol("./restaurants.rst", arbolE);
+
     }
 
     /**
@@ -482,7 +486,7 @@ public class principal extends javax.swing.JFrame {
         String user = tf_usersignin.getText(), pswrd = pf_pswdsignin.getText();
         if (user.equals("admin123") && pswrd.equals("123a")) {
             iniciarAdmin();
-            listaraArbol();
+
         } else {
             for (usuario lu : au.getListarUsers()) {
                 if (lu.getUsername().equals(user) && lu.getContraseña().equals(pswrd)) {
@@ -551,7 +555,7 @@ public class principal extends javax.swing.JFrame {
         r.getProductos().clear();
         tf_nombrerest.setText("");
         tf_ubicacionrest.setText("");
-        listaraArbol();
+
 
     }//GEN-LAST:event_bt_agregarrestMouseClicked
     public void iniciarAdmin() {
@@ -569,20 +573,44 @@ public class principal extends javax.swing.JFrame {
         mi_eliminar.setEnabled(true);
     }
 
-    public void listaraArbol() {
-        DefaultMutableTreeNode n_name;
-
-        DefaultTreeModel tree = (DefaultTreeModel) t_restE.getModel();
-        DefaultMutableTreeNode rest = (DefaultMutableTreeNode) tree.getRoot();
-
+    public void listaraArbol(String file, DefaultTreeModel arbol) {
+        DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) arbol.getRoot();
         File f = null;
         FileReader fr = null;
         BufferedReader br = null;
-        
+
         try {
-            
+            String separar;
+            f = new File(file);
+            fr = new FileReader(f);
+            br = new BufferedReader(fr);
+            while ((separar = br.readLine()) != null) {
+                String[] token = separar.split(";");
+                if (token.length == 3) {
+                    DefaultMutableTreeNode nombre = new DefaultMutableTreeNode(token[0]);
+                    DefaultMutableTreeNode location = new DefaultMutableTreeNode(token[1]);
+                    DefaultMutableTreeNode products = new DefaultMutableTreeNode("Productos");
+                    String[] token2 = token[2].split(",");
+                    for (String t : token2) {
+                        products.add(new DefaultMutableTreeNode(t));
+                    }
+                    nombre.add(location);
+                    nombre.add(products);
+
+                    raiz.add(nombre);
+                }
+            }
+            arbol.reload();
+
         } catch (Exception e) {
         }
+        try {
+            br.close();
+            fr.close();
+        } catch (IOException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
