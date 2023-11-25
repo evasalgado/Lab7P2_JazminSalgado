@@ -80,11 +80,11 @@ public final class principal extends javax.swing.JFrame {
         t_restaurantes = new javax.swing.JTree();
         bt_comprarProducto = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jTextField3 = new javax.swing.JTextField();
+        tf_editn = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        tf_edituser = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jPasswordField3 = new javax.swing.JPasswordField();
+        pf_editpswd = new javax.swing.JPasswordField();
         jLabel10 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         pn_menuadmin = new javax.swing.JPanel();
@@ -261,6 +261,11 @@ public final class principal extends javax.swing.JFrame {
         jLabel10.setText("Nueva Contraseña");
 
         jButton2.setText("Guardar Cambios");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -272,13 +277,13 @@ public final class principal extends javax.swing.JFrame {
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tf_editn, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tf_edituser, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(108, 108, 108)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton2)
-                            .addComponent(jPasswordField3, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pf_editpswd, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
@@ -291,13 +296,13 @@ public final class principal extends javax.swing.JFrame {
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPasswordField3, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(jTextField3))
+                    .addComponent(pf_editpswd, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(tf_editn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_edituser, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addContainerGap(118, Short.MAX_VALUE))
         );
@@ -456,6 +461,11 @@ public final class principal extends javax.swing.JFrame {
 
         mi_eliminar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         mi_eliminar.setText("Eliminar User");
+        mi_eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_eliminarActionPerformed(evt);
+            }
+        });
         m_archivos.add(mi_eliminar);
 
         mb_opciones.add(m_archivos);
@@ -499,6 +509,7 @@ public final class principal extends javax.swing.JFrame {
             iniciarAdmin();
 
         } else {
+            au.cargar();
             for (usuario lu : au.getListarUsers()) {
                 if (lu.getUsername().equals(user) && lu.getContraseña().equals(pswrd)) {
                     JOptionPane.showMessageDialog(this, "Bienvenido " + lu.getNombre());
@@ -586,6 +597,7 @@ public final class principal extends javax.swing.JFrame {
         jfc.setFileFilter(fSale);
         FileWriter fw = null;
         BufferedWriter bw = null;
+        AdministrarUsuario au = new AdministrarUsuario("./users.urs");
         try {
             fw = new FileWriter(f);
             bw = new BufferedWriter(fw);
@@ -593,6 +605,10 @@ public final class principal extends javax.swing.JFrame {
             int price = 100;
             bw.write(select + ";" + price);
             JOptionPane.showMessageDialog(this, "Compra hecha");
+            au.cargar();
+            for (int i = 0; i < au.getListarUsers().size(); i++) {
+                au.getListarUsers().get(i).setSaldo( au.getListarUsers().get(i).getSaldo()+price);
+            }
         } catch (Exception e) {
         }
         try {
@@ -601,6 +617,42 @@ public final class principal extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_bt_comprarProductoMouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+         AdministrarUsuario au = new AdministrarUsuario("./users.urs");
+         String n = tf_editn.getText();
+         String u=tf_edituser.getText();
+         String p=pf_editpswd.getText();
+         au.cargar();
+         for (int i = 0; i < au.getListarUsers().size(); i++) {
+            au.getListarUsers().get(i).setNombre(n);
+            au.getListarUsers().get(i).setUsername(u);
+            au.getListarUsers().get(i).setContraseña(p);
+        }
+        try {
+            au.escribir();
+        } catch (IOException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         JOptionPane.showMessageDialog(this, "Perfil editado");
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void mi_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_eliminarActionPerformed
+        AdministrarUsuario au = new AdministrarUsuario("./users.urs");
+
+         au.cargar();
+         for (int i = 0; i < au.getListarUsers().size(); i++) {
+            au.getListarUsers().remove(i);
+        }
+        try {
+            au.escribir();
+        } catch (IOException ex) {
+            Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         JOptionPane.showMessageDialog(this, "Perfil eliminado");
+         jDialog1.setVisible(true);
+         pn_menuuser.setVisible(false);
+    }//GEN-LAST:event_mi_eliminarActionPerformed
     public void iniciarAdmin() {
         jDialog1.setVisible(false);
         pn_menuadmin.setVisible(true);
@@ -723,7 +775,6 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPasswordField jPasswordField3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -731,12 +782,11 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JMenu m_archivos;
     private javax.swing.JMenuBar mb_opciones;
     private javax.swing.JMenuItem mi_eliminar;
     private javax.swing.JMenuItem mi_salir;
+    private javax.swing.JPasswordField pf_editpswd;
     private javax.swing.JPasswordField pf_pswdsignin;
     private javax.swing.JPanel pn_iniciarsesion;
     private javax.swing.JPanel pn_menuadmin;
@@ -749,6 +799,8 @@ public final class principal extends javax.swing.JFrame {
     private javax.swing.JPasswordField tf_Agregarpswrd;
     private javax.swing.JTextField tf_agregarnombrecomun;
     private javax.swing.JTextField tf_agregarusername;
+    private javax.swing.JTextField tf_editn;
+    private javax.swing.JTextField tf_edituser;
     private javax.swing.JTextField tf_nombreprod;
     private javax.swing.JTextField tf_nombrerest;
     private javax.swing.JTextField tf_ubicacionrest;
