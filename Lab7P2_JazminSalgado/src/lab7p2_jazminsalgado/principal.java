@@ -38,6 +38,7 @@ public class principal extends javax.swing.JFrame {
         jDialog1.setLocationRelativeTo(this);
         jDialog1.setModal(true);
         jDialog1.setVisible(true);
+        listaraArbol();
     }
 
     /**
@@ -481,6 +482,7 @@ public class principal extends javax.swing.JFrame {
         String user = tf_usersignin.getText(), pswrd = pf_pswdsignin.getText();
         if (user.equals("admin123") && pswrd.equals("123a")) {
             iniciarAdmin();
+            listaraArbol();
         } else {
             for (usuario lu : au.getListarUsers()) {
                 if (lu.getUsername().equals(user) && lu.getContraseña().equals(pswrd)) {
@@ -534,7 +536,7 @@ public class principal extends javax.swing.JFrame {
         jfc.setFileFilter(fRest);
         String fname = jfc.getName(f);
 
-        AdministrarRestaurante ar = new AdministrarRestaurante(fname);
+        ar = new AdministrarRestaurante(fname);
 
         String name = tf_nombrerest.getText(), location = tf_ubicacionrest.getText();
         ar.cargar();
@@ -549,7 +551,7 @@ public class principal extends javax.swing.JFrame {
         r.getProductos().clear();
         tf_nombrerest.setText("");
         tf_ubicacionrest.setText("");
-
+        listaraArbol();
 
     }//GEN-LAST:event_bt_agregarrestMouseClicked
     public void iniciarAdmin() {
@@ -566,29 +568,23 @@ public class principal extends javax.swing.JFrame {
         pn_menuuser.setVisible(true);
         mi_eliminar.setEnabled(true);
     }
-    public void listaraArbol(){
-       
-        DefaultTreeModel tree = (DefaultTreeModel)t_restE.getModel();
+
+    public void listaraArbol() {
+        DefaultMutableTreeNode n_name;
+
+        DefaultTreeModel tree = (DefaultTreeModel) t_restE.getModel();
+        DefaultMutableTreeNode rest = (DefaultMutableTreeNode) tree.getRoot();
+
         File f = null;
-        Scanner leer = null;
-        DefaultMutableTreeNode rest=(DefaultMutableTreeNode)tree.getRoot();
-       
+        FileReader fr = null;
+        BufferedReader br = null;
+        
         try {
-            f = new File("./restaurants.rst");
-             AdministrarRestaurante ar = new AdministrarRestaurante("./restaurants.rst");
-            leer = new Scanner(f);
-            while (leer.hasNext()) {                
-                String nombre = leer.nextLine();
-                DefaultMutableTreeNode name;
-                name = new DefaultMutableTreeNode();
-                String ubicacion=leer.nextLine();
-                
-            }
             
         } catch (Exception e) {
         }
-        
     }
+
     /**
      * @param args the command line arguments
      */
@@ -600,7 +596,7 @@ public class principal extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -623,6 +619,7 @@ public class principal extends javax.swing.JFrame {
             }
         });
     }
+    AdministrarRestaurante ar = null;
     FileNameExtensionFilter fRest = new FileNameExtensionFilter("Restaurante", "rst");
     FileNameExtensionFilter fUser = new FileNameExtensionFilter("Usuario", "usr");
     FileNameExtensionFilter fSale = new FileNameExtensionFilter("Venta", "vnt");
