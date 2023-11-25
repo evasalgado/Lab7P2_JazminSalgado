@@ -38,10 +38,8 @@ public class principal extends javax.swing.JFrame {
         jDialog1.setLocationRelativeTo(this);
         jDialog1.setModal(true);
         jDialog1.setVisible(true);
-        DefaultTreeModel arbol = (DefaultTreeModel) t_rest.getModel();
-        DefaultTreeModel arbolE = (DefaultTreeModel) t_restE.getModel();
-        listaraArbol("./restaurants.rst", arbol);
-        listaraArbol("./restaurants.rst", arbolE);
+        listaraArbol("./restaurants.rst");
+        listaraArbol("./restaurants.rst");
 
     }
 
@@ -440,6 +438,11 @@ public class principal extends javax.swing.JFrame {
 
         mi_salir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
         mi_salir.setText("Salir");
+        mi_salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_salirActionPerformed(evt);
+            }
+        });
         m_archivos.add(mi_salir);
         m_archivos.add(jSeparator1);
 
@@ -558,6 +561,14 @@ public class principal extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_bt_agregarrestMouseClicked
+
+    private void mi_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_salirActionPerformed
+         jDialog1.setVisible(true);
+        pn_menuadmin.setVisible(false);
+        jTabbedPane2.setVisible(false);
+        pn_menuuser.setVisible(false);
+        mi_eliminar.setEnabled(false);
+    }//GEN-LAST:event_mi_salirActionPerformed
     public void iniciarAdmin() {
         jDialog1.setVisible(false);
         pn_menuadmin.setVisible(true);
@@ -573,7 +584,8 @@ public class principal extends javax.swing.JFrame {
         mi_eliminar.setEnabled(true);
     }
 
-    public void listaraArbol(String file, DefaultTreeModel arbol) {
+    public void listaraArbol(String file) {
+        DefaultTreeModel arbol=(DefaultTreeModel) t_restE.getModel();
         DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) arbol.getRoot();
         File f = null;
         FileReader fr = null;
@@ -590,7 +602,7 @@ public class principal extends javax.swing.JFrame {
                     DefaultMutableTreeNode nombre = new DefaultMutableTreeNode(token[0]);
                     DefaultMutableTreeNode location = new DefaultMutableTreeNode(token[1]);
                     DefaultMutableTreeNode products = new DefaultMutableTreeNode("Productos");
-                    String[] token2 = token[2].split(",");
+                    String[] token2 = token[2].split("");
                     for (String t : token2) {
                         products.add(new DefaultMutableTreeNode(t));
                     }
